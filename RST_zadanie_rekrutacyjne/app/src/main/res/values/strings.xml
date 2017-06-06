@@ -3,4 +3,5 @@
     <string name="select_decks_number_text">Wprowadź liczbę talii:</string>
     <string name="start_new_game_button_text">Nowa gra</string>
     <string name="no_internet_connection_text">Do gry wymagane jest połączenie z internetem</string>
+    <string name="wrong_decks_number">Liczba talii musi być z zakresu 1-5</string>
 </resources>

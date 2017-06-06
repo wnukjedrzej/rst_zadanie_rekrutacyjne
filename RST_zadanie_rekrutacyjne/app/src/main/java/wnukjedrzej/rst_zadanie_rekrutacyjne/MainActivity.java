@@ -2,6 +2,7 @@ package wnukjedrzej.rst_zadanie_rekrutacyjne;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.StringRes;
@@ -27,7 +28,16 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 if(checkInternetConnection()){
                     //jezeli mamy dostep do internetu
-                    
+                    int val = Integer.parseInt(editTextDecksNumbers.getText().toString());
+                    if(val < 1 || val > 5){
+                        Toast.makeText(v.getContext(),R.string.wrong_decks_number,Toast.LENGTH_SHORT).show();
+                    } else {
+                        Bundle myBundle = new Bundle();
+                        myBundle.putInt("decksNumber", val);
+                        Intent myIntent = new Intent(MainActivity.this, GameActivity.class);
+                        myIntent.putExtras(myBundle);
+                        startActivity(myIntent);
+                    }
                 } else {
                     //brak dostepu do internetu
                     Toast.makeText(v.getContext(),R.string.no_internet_connection_text,Toast.LENGTH_SHORT).show();
