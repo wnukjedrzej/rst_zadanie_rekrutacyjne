@@ -10,4 +10,9 @@
     <string name="shuffle_cars_button_text">Nowe rozdanie</string>
     <string name="change_card_button_text">Wymień kartę</string>
     <string name="data_download_error_text">Nie udało się pobrać danych z internetu</string>
+    <string name="zero_cards_remain">Skończyły się karty w talii\nNależy rozpocząć nowe rozdanie</string>
+    <string name="choose_card_text">Najpierw należy wybrać kartę do wymiany</string>
+    <string name="wrong_shuffle_text">Tasowanie talii nie powiodło się</string>
+    <string name="loading_data_title_text">Ładowanie danych</string>
+    <string name="loading_data_msg_text">Trwa ładowanie danych, proszę czekać...</string>
 </resources>

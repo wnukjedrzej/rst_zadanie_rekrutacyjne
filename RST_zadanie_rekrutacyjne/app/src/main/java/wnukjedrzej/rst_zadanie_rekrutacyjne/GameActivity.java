@@ -1,8 +1,11 @@
 package wnukjedrzej.rst_zadanie_rekrutacyjne;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -37,6 +40,8 @@ public class GameActivity extends Activity {
     private ImageView imageViewCard5;
     private Deck deck;
     private Card[] cards;
+    private int activeCard = -1; // zmienna określająca, która karta została wybrana do wymiany
+    private ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,12 +60,80 @@ public class GameActivity extends Activity {
         imageViewCard3 = (ImageView)findViewById(R.id.imageView3);
         imageViewCard4 = (ImageView)findViewById(R.id.imageView4);
         imageViewCard5 = (ImageView)findViewById(R.id.imageView5);
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle(getResources().getString(R.string.loading_data_title_text));
+        progressDialog.setMessage(getResources().getString(R.string.loading_data_msg_text));
+        progressDialog.setCancelable(false);
+
+        imageViewCard1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activeCard = 0;
+                clearColors();
+                imageViewCard1.setColorFilter(Color.argb(255,150,150,200), android.graphics.PorterDuff.Mode.MULTIPLY );
+            }
+        });
+        imageViewCard2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activeCard = 1;
+                clearColors();
+                imageViewCard2.setColorFilter(Color.argb(255,150,150,200), android.graphics.PorterDuff.Mode.MULTIPLY );
+            }
+        });
+        imageViewCard3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activeCard = 2;
+                clearColors();
+                imageViewCard3.setColorFilter(Color.argb(255,150,150,200), android.graphics.PorterDuff.Mode.MULTIPLY );
+            }
+        });
+        imageViewCard4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activeCard = 3;
+                clearColors();
+                imageViewCard4.setColorFilter(Color.argb(255,150,150,200), android.graphics.PorterDuff.Mode.MULTIPLY );
+            }
+        });
+        imageViewCard5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activeCard = 4;
+                clearColors();
+                imageViewCard5.setColorFilter(Color.argb(255,150,150,200), android.graphics.PorterDuff.Mode.MULTIPLY );
+            }
+        });
         deck = new Deck(decksNumber);
         cards = new Card[5];
         new getDeckUrlExecutor().execute(deck.getDeckApiUrl());
     }
+    private void clearColors(){
+        imageViewCard1.setColorFilter(Color.argb(255,255,255,255), android.graphics.PorterDuff.Mode.MULTIPLY );
+        imageViewCard2.setColorFilter(Color.argb(255,255,255,255), android.graphics.PorterDuff.Mode.MULTIPLY );
+        imageViewCard3.setColorFilter(Color.argb(255,255,255,255), android.graphics.PorterDuff.Mode.MULTIPLY );
+        imageViewCard4.setColorFilter(Color.argb(255,255,255,255), android.graphics.PorterDuff.Mode.MULTIPLY );
+        imageViewCard5.setColorFilter(Color.argb(255,255,255,255), android.graphics.PorterDuff.Mode.MULTIPLY );
+    }
     public void changeOneCard(View v){
-        new getCardsUrlExecutor().execute("1");
+        if(deck.getCardsRemain() > 0) {
+            if(activeCard == -1){
+                Toast.makeText(v.getContext(), getResources().getString(R.string.choose_card_text), Toast.LENGTH_SHORT).show();
+            } else {
+                cards[activeCard] = cards[0]; // karta na pozycji 0 zostanie zastapiona przez nowa karte, dlatego karta z pozycji 0 wstawiana jest w miejsce wybranej karty
+                activeCard = -1;
+                clearColors();
+                new getCardsUrlExecutor().execute("1");
+            }
+        } else {
+            Toast.makeText(v.getContext(), getResources().getString(R.string.zero_cards_remain), Toast.LENGTH_SHORT).show();
+        }
+    }
+    public void shuffleDeck(View v){
+        activeCard = -1;
+        clearColors();
+        new shuffleDeckUrlExecutor().execute();
     }
     private void drawCards(){
         if(cards[0] != null) {
@@ -87,6 +160,12 @@ public class GameActivity extends Activity {
 
         private Exception exception;
 
+        protected void onPreExecute() {
+            buttonChangeCard.setEnabled(false);
+            buttonShuffleDeck.setEnabled(false);
+            progressDialog.show();
+        }
+
         protected String doInBackground(String... urls) {
             try {
                 URL url = new URL(urls[0]);
@@ -112,6 +191,8 @@ public class GameActivity extends Activity {
         }
 
         protected void onPostExecute(String response) {
+            buttonChangeCard.setEnabled(true);
+            buttonShuffleDeck.setEnabled(true);
             if(response!= null) {
                 try {
                     JSONObject obj = (JSONObject) new JSONTokener(response).nextValue();
@@ -121,18 +202,25 @@ public class GameActivity extends Activity {
                     textViewRemainCards.setText(getResources().getString(R.string.cards_remain_text)+" "+deck.getCardsRemain());
                     new getCardsUrlExecutor().execute("5"); // pobieramy pięć kart z tali
                 } catch (JSONException e) {
-                    Toast.makeText(GameActivity.this, R.string.data_download_error_text,Toast.LENGTH_SHORT);
+                    Toast.makeText(GameActivity.this,getResources().getString(R.string.data_download_error_text),Toast.LENGTH_SHORT);
                     Log.e("myERROR", e.getMessage(), e);
                 }
             } else {
-                Toast.makeText(GameActivity.this, R.string.data_download_error_text,Toast.LENGTH_SHORT);
+                Toast.makeText(GameActivity.this, getResources().getString(R.string.data_download_error_text),Toast.LENGTH_SHORT);
             }
+            progressDialog.dismiss();
         }
     }
 
     private class getCardsUrlExecutor extends AsyncTask<String, Void, String> {
 
         private Exception exception;
+
+        protected void onPreExecute() {
+            buttonChangeCard.setEnabled(false);
+            buttonShuffleDeck.setEnabled(false);
+            progressDialog.show();
+        }
 
         protected String doInBackground(String... urls) {
             try {
@@ -149,22 +237,17 @@ public class GameActivity extends Activity {
                     String response = stringBuilder.toString();
                     if(response!=null) {
                         try {
-                            Log.e("myERROR", "b");
                             JSONObject obj = (JSONObject) new JSONTokener(response).nextValue();
                             deck.setCardsRemain(obj.getInt("remaining"));
                             JSONArray cardsData = obj.getJSONArray("cards");
                             for (int index = 0; index < cardsData.length(); index++) {
                                 JSONObject currentCard = cardsData.getJSONObject(index);
                                 try {
-                                    Log.e("myERROR", "c " + currentCard.getString("image"));
                                     InputStream imgStream = new java.net.URL(currentCard.getString("image")).openStream();
-                                    Log.e("myERROR", "d");
                                     cards[index] = new Card(currentCard.getString("suit"), currentCard.getString("value"), currentCard.getString("image"), BitmapFactory.decodeStream(imgStream));
-                                    Log.e("myERROR", "e");
                                     imgStream.close();
-                                    Log.e("myERROR", "f");
                                 } catch (Exception e) {
-                                    Toast.makeText(GameActivity.this, R.string.data_download_error_text, Toast.LENGTH_SHORT);
+                                    Toast.makeText(GameActivity.this, getResources().getString(R.string.data_download_error_text), Toast.LENGTH_SHORT);
                                     Log.e("myERROR1", e.getMessage(), e);
                                     return null; // przerywamy petle i konczymy ta funkcje aby nie wykonala sie dalsza czesc kodu
                                 }
@@ -173,7 +256,7 @@ public class GameActivity extends Activity {
                             //textViewRemainCards.setText(getResources().getString(R.string.cards_remain_text) + " " + deck.getCardsRemain());
                             //drawCards();
                         } catch (JSONException e) {
-                            Toast.makeText(GameActivity.this, R.string.data_download_error_text, Toast.LENGTH_SHORT);
+                            Toast.makeText(GameActivity.this, getResources().getString(R.string.data_download_error_text), Toast.LENGTH_SHORT);
                             Log.e("myERROR", e.getMessage(), e);
                         }
                         return String.valueOf(deck.getCardsRemain());
@@ -192,13 +275,77 @@ public class GameActivity extends Activity {
         }
 
         protected void onPostExecute(String response) {
+            buttonChangeCard.setEnabled(true);
+            buttonShuffleDeck.setEnabled(true);
             if(response!= null) {
                 textViewRemainCards.setText(getResources().getString(R.string.cards_remain_text) + " " +response);
                 drawCards();
                 checkCardSet();
             } else {
-                Toast.makeText(GameActivity.this, R.string.data_download_error_text,Toast.LENGTH_SHORT);
+                Toast.makeText(GameActivity.this, getResources().getString(R.string.data_download_error_text),Toast.LENGTH_SHORT);
             }
+            progressDialog.dismiss();
+        }
+    }
+
+    private class shuffleDeckUrlExecutor extends AsyncTask<Void, Void, String> {
+
+        private Exception exception;
+
+        protected void onPreExecute() {
+            buttonChangeCard.setEnabled(false);
+            buttonShuffleDeck.setEnabled(false);
+            progressDialog.show();
+        }
+
+        protected String doInBackground(Void... urls) {
+            try {
+                URL url = new URL(deck.getShuffleCardsApiUrl());
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                try {
+                    BufferedReader buffer = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                    StringBuilder stringBuilder = new StringBuilder();
+                    String line;
+                    while ((line = buffer.readLine()) != null) {
+                        stringBuilder.append(line).append("\n");
+                    }
+                    buffer.close();
+
+                    return stringBuilder.toString();
+                } finally {
+                    urlConnection.disconnect();
+                }
+
+            } catch (Exception e) {
+                Log.e("myERROR", e.getMessage(), e);
+                return null;
+            }
+        }
+
+        protected void onPostExecute(String response) {
+            buttonChangeCard.setEnabled(true);
+            buttonShuffleDeck.setEnabled(true);
+
+            if(response!= null) {
+                try {
+                    JSONObject obj = (JSONObject) new JSONTokener(response).nextValue();
+
+                    deck.setCardsRemain(obj.getInt("remaining"));
+                    boolean shuffled = obj.getBoolean("shuffled");
+                    textViewRemainCards.setText(getResources().getString(R.string.cards_remain_text)+" "+deck.getCardsRemain());
+                    if(shuffled) {
+                        new getCardsUrlExecutor().execute("5"); // pobieramy pięć kart z tali
+                    } else {
+                        Toast.makeText(GameActivity.this,getResources().getString(R.string.wrong_shuffle_text),Toast.LENGTH_SHORT);
+                    }
+                } catch (JSONException e) {
+                    Toast.makeText(GameActivity.this,getResources().getString(R.string.data_download_error_text),Toast.LENGTH_SHORT);
+                    Log.e("myERROR", e.getMessage(), e);
+                }
+            } else {
+                Toast.makeText(GameActivity.this, getResources().getString(R.string.data_download_error_text),Toast.LENGTH_SHORT);
+            }
+            progressDialog.dismiss();
         }
     }
 }
