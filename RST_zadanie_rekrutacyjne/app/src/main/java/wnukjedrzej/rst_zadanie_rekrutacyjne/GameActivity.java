@@ -158,7 +158,43 @@ public class GameActivity extends Activity {
         progressDialog.dismiss();
     }
     private void checkCardSet(){
+        int[] valuesOfCards = new int[13];
+        int[] valuesOfColors= new int[4];
+        boolean isColorSet = false;
+        boolean isStairsSet = false;
+        boolean isFigureSet = false;
+        boolean isTwinsSet = false;
+        int figureCount = 0;
+        String setInHand = getResources().getString(R.string.cards_set_text);
 
+        for (Card c : cards){
+            valuesOfCards[c.getCardValue() - 1]++;
+            valuesOfColors[c.getColorValue() - 1]++;
+        }
+        for(int i = 0; i < valuesOfColors.length; i++){
+            if(valuesOfColors[i] > 2 ) isColorSet = true; // sprawdzamy kolor
+        }
+        for(int i = 0; i < valuesOfCards.length; i++){
+
+            if(valuesOfCards[i] > 2) isTwinsSet = true; // sprawdzamy czy mamy uklad blizniaki
+
+            if( i > 0 && i < valuesOfCards.length - 1 && valuesOfCards[i-1] > 0 && valuesOfCards[i] > 0 && valuesOfCards[i+1] > 0) isStairsSet = true; // sprawdzamy czy mamy uklad schodki
+
+            if( i > 9 ){
+                figureCount += valuesOfCards[i];
+                if(figureCount > 2) isFigureSet = true; // sprawdzamy, czy mamy uklad 'figury'
+            }
+        }
+        if(isTwinsSet){
+            setInHand += getResources().getString(R.string.twins_set_text);
+        } else if (isFigureSet){
+            setInHand += getResources().getString(R.string.figure_set_text);
+        } else if (isStairsSet){
+            setInHand += getResources().getString(R.string.stairs_set_text);
+        } else if (isColorSet){
+            setInHand += getResources().getString(R.string.color_set_text);
+        }
+        textViewCardsSet.setText(setInHand);
     }
     // przetasowanie bedzie pobieralo piec nowych kart
     private class getDeckUrlExecutor extends AsyncTask<String, Void, String> {

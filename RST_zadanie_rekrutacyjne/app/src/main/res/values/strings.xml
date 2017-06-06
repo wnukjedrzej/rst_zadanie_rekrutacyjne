@@ -6,7 +6,7 @@
     <string name="wrong_decks_number">Liczba talii musi być z zakresu 1-5</string>
     <string name="cards_remain_text">Pozostało kart:</string>
     <string name="decks_id_text">ID talii:</string>
-    <string name="cards_set_text">Znaleziony układ:</string>
+    <string name="cards_set_text">Układ:</string>
     <string name="shuffle_cars_button_text">Nowe rozdanie</string>
     <string name="change_card_button_text">Wymień kartę</string>
     <string name="data_download_error_text">Nie udało się pobrać danych z internetu</string>
@@ -15,4 +15,8 @@
     <string name="wrong_shuffle_text">Tasowanie talii nie powiodło się</string>
     <string name="loading_data_title_text">Ładowanie danych</string>
     <string name="loading_data_msg_text">Trwa ładowanie danych, proszę czekać...</string>
+    <string name="color_set_text">Kolor</string>
+    <string name="figure_set_text">Figury</string>
+    <string name="stairs_set_text">Schodki</string>
+    <string name="twins_set_text">Bliźniaki</string>
 </resources>
