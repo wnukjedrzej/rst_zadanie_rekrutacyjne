@@ -9,6 +9,66 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="wnukjedrzej.rst_zadanie_rekrutacyjne.MainActivity"
-    android:background="@drawable/table">
+    android:background="@drawable/table"
+    android:weightSum="2">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"></LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:weightSum="3"
+            android:layout_marginBottom="5px">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/select_decks_number_text"
+                android:id="@+id/textView"
+                android:layout_weight="1"
+                android:background="#2d000000"
+                android:textColor="#ad862c"
+                android:textAlignment="center" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:ems="10"
+                android:id="@+id/editTextDecksNumbers"
+                android:layout_weight="2"
+                android:numeric="integer"
+                android:textColor="#ad862c"
+                android:text="1"
+                android:textAlignment="center"
+                android:background="#2d000000" />
+
+        </LinearLayout>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/start_new_game_button_text"
+            android:id="@+id/buttonStartGame"
+            android:background="#4b000000"
+            android:textColor="#ad862c" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"></LinearLayout>
 
 </LinearLayout>

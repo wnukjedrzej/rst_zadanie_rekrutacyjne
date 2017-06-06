@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">RST_zadanie_rekrutacyjne</string>
+    <string name="select_decks_number_text">Wprowadź liczbę talii:</string>
+    <string name="start_new_game_button_text">Nowa gra</string>
+    <string name="no_internet_connection_text">Do gry wymagane jest połączenie z internetem</string>
 </resources>
