@@ -19,4 +19,5 @@
     <string name="figure_set_text">Figury</string>
     <string name="stairs_set_text">Schodki</string>
     <string name="twins_set_text">Bliźniaki</string>
+    <string name="need_to_put_decks_numer_text">Należy wprowadzić liczbę talii</string>
 </resources>

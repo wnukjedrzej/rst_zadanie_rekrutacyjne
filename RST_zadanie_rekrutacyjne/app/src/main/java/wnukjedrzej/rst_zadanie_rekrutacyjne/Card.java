@@ -2,10 +2,12 @@ package wnukjedrzej.rst_zadanie_rekrutacyjne;
 
 import android.graphics.Bitmap;
 
+import java.io.Serializable;
+
 /**
  * Created by Jędrzej on 2017-06-06.
  */
-public class Card {
+public class Card implements Serializable {
     private int cardValue;
     private int colorValue;
     private String imageAddress;

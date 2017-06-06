@@ -47,23 +47,31 @@ public class GameActivity extends Activity {
 
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        //outState.putString("deckID", deck.getDeckID());
+        try {
+            outState.putSerializable("deck", deck);
+            outState.putSerializable("cards", cards);
+        } catch (Exception e){
+            Log.e("myERROR", e.getMessage(), e);
+        }
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-
-        Intent myIntent = getIntent();
-        Bundle myBundle = myIntent.getExtras();
-        int decksNumber = myBundle.getInt("decksNumber");
         textViewCardsSet = (TextView) findViewById(R.id.textViewCardsSet);
-        textViewDeckID = (TextView)findViewById(R.id.textViewDeckID);
-        textViewRemainCards = (TextView)findViewById(R.id.textViewCardsRemained);
-        buttonChangeCard = (Button)findViewById(R.id.buttonChangeCard);
-        buttonShuffleDeck = (Button)findViewById(R.id.buttonShuffle);
-        imageViewCard1 = (ImageView)findViewById(R.id.imageView1);
-        imageViewCard2 = (ImageView)findViewById(R.id.imageView2);
-        imageViewCard3 = (ImageView)findViewById(R.id.imageView3);
-        imageViewCard4 = (ImageView)findViewById(R.id.imageView4);
-        imageViewCard5 = (ImageView)findViewById(R.id.imageView5);
+        textViewDeckID = (TextView) findViewById(R.id.textViewDeckID);
+        textViewRemainCards = (TextView) findViewById(R.id.textViewCardsRemained);
+        buttonChangeCard = (Button) findViewById(R.id.buttonChangeCard);
+        buttonShuffleDeck = (Button) findViewById(R.id.buttonShuffle);
+        imageViewCard1 = (ImageView) findViewById(R.id.imageView1);
+        imageViewCard2 = (ImageView) findViewById(R.id.imageView2);
+        imageViewCard3 = (ImageView) findViewById(R.id.imageView3);
+        imageViewCard4 = (ImageView) findViewById(R.id.imageView4);
+        imageViewCard5 = (ImageView) findViewById(R.id.imageView5);
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle(getResources().getString(R.string.loading_data_title_text));
         progressDialog.setMessage(getResources().getString(R.string.loading_data_msg_text));
@@ -74,7 +82,7 @@ public class GameActivity extends Activity {
             public void onClick(View v) {
                 activeCard = 0;
                 clearColors();
-                imageViewCard1.setColorFilter(Color.argb(255,150,150,200), android.graphics.PorterDuff.Mode.MULTIPLY );
+                imageViewCard1.setColorFilter(Color.argb(255, 150, 150, 200), android.graphics.PorterDuff.Mode.MULTIPLY);
             }
         });
         imageViewCard2.setOnClickListener(new View.OnClickListener() {
@@ -82,7 +90,7 @@ public class GameActivity extends Activity {
             public void onClick(View v) {
                 activeCard = 1;
                 clearColors();
-                imageViewCard2.setColorFilter(Color.argb(255,150,150,200), android.graphics.PorterDuff.Mode.MULTIPLY );
+                imageViewCard2.setColorFilter(Color.argb(255, 150, 150, 200), android.graphics.PorterDuff.Mode.MULTIPLY);
             }
         });
         imageViewCard3.setOnClickListener(new View.OnClickListener() {
@@ -90,7 +98,7 @@ public class GameActivity extends Activity {
             public void onClick(View v) {
                 activeCard = 2;
                 clearColors();
-                imageViewCard3.setColorFilter(Color.argb(255,150,150,200), android.graphics.PorterDuff.Mode.MULTIPLY );
+                imageViewCard3.setColorFilter(Color.argb(255, 150, 150, 200), android.graphics.PorterDuff.Mode.MULTIPLY);
             }
         });
         imageViewCard4.setOnClickListener(new View.OnClickListener() {
@@ -98,7 +106,7 @@ public class GameActivity extends Activity {
             public void onClick(View v) {
                 activeCard = 3;
                 clearColors();
-                imageViewCard4.setColorFilter(Color.argb(255,150,150,200), android.graphics.PorterDuff.Mode.MULTIPLY );
+                imageViewCard4.setColorFilter(Color.argb(255, 150, 150, 200), android.graphics.PorterDuff.Mode.MULTIPLY);
             }
         });
         imageViewCard5.setOnClickListener(new View.OnClickListener() {
@@ -106,12 +114,27 @@ public class GameActivity extends Activity {
             public void onClick(View v) {
                 activeCard = 4;
                 clearColors();
-                imageViewCard5.setColorFilter(Color.argb(255,150,150,200), android.graphics.PorterDuff.Mode.MULTIPLY );
+                imageViewCard5.setColorFilter(Color.argb(255, 150, 150, 200), android.graphics.PorterDuff.Mode.MULTIPLY);
             }
         });
-        deck = new Deck(decksNumber);
-        cards = new Card[5];
-        new getDeckUrlExecutor().execute(deck.getDeckApiUrl());
+
+        if(savedInstanceState != null){
+            //deck.setID(savedInstanceState.getString("deckID"));
+            deck = (Deck)savedInstanceState.getSerializable("deck");
+            cards = (Card[])savedInstanceState.getSerializable("cards");
+            textViewDeckID.setText(getResources().getString(R.string.decks_id_text)+" "+deck.getDeckID());
+            textViewRemainCards.setText(getResources().getString(R.string.cards_remain_text)+" "+deck.getCardsRemain());
+            drawCards();
+            checkCardSet();
+        } else {
+            Intent myIntent = getIntent();
+            Bundle myBundle = myIntent.getExtras();
+            int decksNumber = myBundle.getInt("decksNumber");
+
+            deck = new Deck(decksNumber);
+            cards = new Card[5];
+            new getDeckUrlExecutor().execute(deck.getDeckApiUrl());
+        }
     }
     private void clearColors(){
         imageViewCard1.setColorFilter(Color.argb(255,255,255,255), android.graphics.PorterDuff.Mode.MULTIPLY );

@@ -28,15 +28,19 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 if(checkInternetConnection()){
                     //jezeli mamy dostep do internetu
-                    int val = Integer.parseInt(editTextDecksNumbers.getText().toString());
-                    if(val < 1 || val > 5){
-                        Toast.makeText(v.getContext(),R.string.wrong_decks_number,Toast.LENGTH_SHORT).show();
+                    if(editTextDecksNumbers.getText().toString().length() > 0) {
+                        int val = Integer.parseInt(editTextDecksNumbers.getText().toString());
+                        if (val < 1 || val > 5) {
+                            Toast.makeText(v.getContext(), R.string.wrong_decks_number, Toast.LENGTH_SHORT).show();
+                        } else {
+                            Bundle myBundle = new Bundle();
+                            myBundle.putInt("decksNumber", val);
+                            Intent myIntent = new Intent(MainActivity.this, GameActivity.class);
+                            myIntent.putExtras(myBundle);
+                            startActivity(myIntent);
+                        }
                     } else {
-                        Bundle myBundle = new Bundle();
-                        myBundle.putInt("decksNumber", val);
-                        Intent myIntent = new Intent(MainActivity.this, GameActivity.class);
-                        myIntent.putExtras(myBundle);
-                        startActivity(myIntent);
+                        Toast.makeText(v.getContext(),R.string.need_to_put_decks_numer_text,Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     //brak dostepu do internetu

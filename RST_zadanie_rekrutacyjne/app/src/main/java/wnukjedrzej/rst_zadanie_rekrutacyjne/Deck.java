@@ -10,13 +10,14 @@ import org.json.JSONTokener;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
  * Created by Jędrzej on 2017-06-06.
  */
-public class Deck {
+public class Deck implements Serializable {
     private String id;
     private int cardsRemain;
     private String newDeckApiUrl;
