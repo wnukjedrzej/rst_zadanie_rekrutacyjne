@@ -7,7 +7,7 @@
     <string name="cards_remain_text">Pozostało kart:</string>
     <string name="decks_id_text">ID talii:</string>
     <string name="cards_set_text">Znaleziony układ:</string>
-    <string name="shuffle_cars_button_text">Przetasuj karty</string>
+    <string name="shuffle_cars_button_text">Nowe rozdanie</string>
     <string name="change_card_button_text">Wymień kartę</string>
     <string name="data_download_error_text">Nie udało się pobrać danych z internetu</string>
 </resources>

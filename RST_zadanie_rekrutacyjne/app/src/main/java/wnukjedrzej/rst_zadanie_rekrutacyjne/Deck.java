@@ -19,9 +19,17 @@ import java.net.URL;
 public class Deck {
     private String id;
     private int cardsRemain;
-    private String deckApiUrl;
+    private String newDeckApiUrl;
+
+
     public Deck(int decksNumber){
-        deckApiUrl = "https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=" + decksNumber;
+        newDeckApiUrl = "https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=" + decksNumber;
+    }
+    public String getGetCardsApiUrl(String cardsNumber){
+        return "https://deckofcardsapi.com/api/deck/"+id+"/draw/?count="+cardsNumber;
+    }
+    public String getShuffleCardsApiUrl(){
+        return "https://deckofcardsapi.com/api/deck/"+id+"/shuffle/";
     }
     public void setID(String id){
         this.id = id;
@@ -33,7 +41,7 @@ public class Deck {
         return id;
     }
     public String getDeckApiUrl(){
-        return deckApiUrl;
+        return newDeckApiUrl;
     }
     public int getCardsRemain(){
         return cardsRemain;

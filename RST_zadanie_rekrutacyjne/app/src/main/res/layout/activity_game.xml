@@ -109,7 +109,8 @@
             android:textColor="#ad862c"
             android:background="#4b000000"
             android:layout_weight="1"
-            android:enabled="true" />
+            android:enabled="true"
+            android:onClick="changeOneCard" />
 
         <Button
             android:layout_width="match_parent"

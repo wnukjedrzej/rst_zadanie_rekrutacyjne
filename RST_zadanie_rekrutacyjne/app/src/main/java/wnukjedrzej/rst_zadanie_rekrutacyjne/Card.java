@@ -1,5 +1,7 @@
 package wnukjedrzej.rst_zadanie_rekrutacyjne;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by Jędrzej on 2017-06-06.
  */
@@ -7,11 +9,12 @@ public class Card {
     private int cardValue;
     private int colorValue;
     private String imageAddress;
-
-    public Card(String suit, String value, String _image){
+    private Bitmap bmp;
+    public Card(String suit, String value, String image, Bitmap bmp){
         colorValue = convertToColorValue(suit);
         cardValue = convertToCardValue(value);
-        imageAddress = _image;
+        imageAddress = image;
+        this.bmp = bmp;
     }
     private int convertToCardValue(String value){
         String[] array = {"ACE","2","3","4","5","6","7","8","9","10","JACK","QUEEN","KING"};
@@ -35,5 +38,8 @@ public class Card {
     }
     public String getImageAddress(){
         return imageAddress;
+    }
+    public Bitmap getBmp(){
+        return bmp;
     }
 }
