@@ -11,7 +11,7 @@ public class Card implements Serializable {
     private int cardValue;
     private int colorValue;
     private String imageAddress;
-    private Bitmap bmp;
+    private transient Bitmap bmp;
     public Card(String suit, String value, String image, Bitmap bmp){
         colorValue = convertToColorValue(suit);
         cardValue = convertToCardValue(value);
